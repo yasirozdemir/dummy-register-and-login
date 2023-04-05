@@ -5,8 +5,35 @@ const Register = () => {
   useEffect(() => {
     document.title = "Register";
   }, []);
-  const registerFunction = () => {
+  const registerFunction = async () => {
+    const name = document.querySelector("#name");
+    const surname = document.querySelector("#surname");
+    const email = document.querySelector("#email");
+    const password = document.querySelector("#password");
+    const newUser = {
+      name: name.value,
+      surname: surname.value,
+      email: email.value,
+      password: password.value,
+    };
     try {
+      const res = await fetch("http://localhost:3001/authors/", {
+        method: "POST",
+        body: JSON.stringify(newUser),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        name.value = "";
+        surname.value = "";
+        email.value = "";
+        password.value = "";
+        const resJson = await res.json();
+        console.log(resJson);
+      } else {
+        alert("Something went wriong :(");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -17,7 +44,7 @@ const Register = () => {
   };
   return (
     <Container>
-      <Row id="login" className="justify-content-center align-items-center">
+      <Row id="register" className="justify-content-center align-items-center">
         <Col xs={12} md={6}>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
