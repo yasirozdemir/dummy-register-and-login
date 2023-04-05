@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = "Login";
   }, []);
@@ -26,7 +27,8 @@ const Login = () => {
         email.value = "";
         password.value = "";
         const resJson = await res.json();
-        console.log(resJson.accessToken);
+        localStorage.setItem("accessToken", resJson.accessToken);
+        navigate("/home");
       } else {
         alert("Something went wrong :(");
       }
