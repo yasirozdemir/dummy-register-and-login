@@ -5,10 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  useEffect(() => {
-    document.title = "Login";
-    // eslint-disable-next-line
-  }, []);
   const loginFunction = async () => {
     const email = document.querySelector("#email");
     const password = document.querySelector("#password");
@@ -41,6 +37,11 @@ const Login = () => {
     e.preventDefault();
     loginFunction();
   };
+  useEffect(() => {
+    document.title = "Login";
+    localStorage.clear();
+    // eslint-disable-next-line
+  }, []);
   return (
     <Container>
       <Row id="login" className="justify-content-center align-items-center">

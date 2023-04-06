@@ -8,22 +8,32 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const [user, setUser] = useState();
   const [posts, setPosts] = useState();
+
+  useEffect(() => {
+    let accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) navigate("/login");
+    if (searchParams.get("accessToken")) {
+      // localStorage.setItem("accessToken", searchParams.get("accessToken"));
+      accessToken = searchParams.get("accessToken");
+      navigate("/");
+    }
+    getUserData(accessToken);
+    getBlogposts(accessToken);
+    // eslint-disable-next-line
+  }, []);
+
   const getUserData = async (token) => {
     try {
-      if (token) {
-        const res = await fetch(process.env.REACT_APP_BE_URL + "/authors/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (res.ok) {
-          const userData = await res.json();
-          setUser(userData);
-        } else {
-          console.log("error setting user data");
-        }
+      const res = await fetch(process.env.REACT_APP_BE_URL + "/authors/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        setUser(userData);
       } else {
-        console.log("token error");
+        console.log("error setting user data");
       }
     } catch (error) {
       console.log(error);
@@ -50,20 +60,9 @@ const Home = () => {
     }
   };
   const logOut = () => {
-    navigate("/login");
     localStorage.clear();
+    navigate("/login");
   };
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) navigate("/login");
-    if (searchParams.get("accessToken")) {
-      localStorage.setItem("accessToken", searchParams.get("accessToken"));
-      navigate("/");
-    }
-    getUserData(accessToken);
-    getBlogposts(accessToken);
-    // eslint-disable-next-line
-  }, []);
   return (
     <Container>
       <Row>
@@ -79,7 +78,7 @@ const Home = () => {
       <Row>
         <Blogposts posts={posts} />
       </Row>
-      <Button variant="danger" onClick={logOut}>
+      <Button type="button" variant="danger" onClick={logOut}>
         Log Out
       </Button>
     </Container>
