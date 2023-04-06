@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
+import GoogleButton from "react-google-button";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
   useEffect(() => {
     document.title = "Login";
+    // eslint-disable-next-line
   }, []);
   const loginFunction = async () => {
     const email = document.querySelector("#email");
@@ -14,7 +16,6 @@ const Login = () => {
       email: email.value,
       password: password.value,
     };
-    console.log(loginInfo);
     try {
       const res = await fetch("http://localhost:3001/authors/me/login", {
         method: "POST",
@@ -28,7 +29,7 @@ const Login = () => {
         password.value = "";
         const resJson = await res.json();
         localStorage.setItem("accessToken", resJson.accessToken);
-        navigate("/home");
+        navigate("/");
       } else {
         alert("Something went wrong :(");
       }
@@ -61,13 +62,21 @@ const Login = () => {
                 id="password"
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Login
-            </Button>
-            <span className="mx-3">OR</span>
-            <Link to="/register" className="btn btn-info">
-              Register
-            </Link>
+            <div className="d-flex flex-column">
+              <Button variant="primary" type="submit" className="mb-2">
+                Login
+              </Button>
+              <a
+                href={process.env.REACT_APP_BE_URL + "/authors/me/googleLogin"}
+                style={{ textDecoration: "none" }}
+              >
+                <GoogleButton className="w-100 rounded" />
+              </a>
+              <span className="mx-3">OR</span>
+              <Link to="/register" className="btn btn-info">
+                Register
+              </Link>
+            </div>
           </Form>
         </Col>
       </Row>
