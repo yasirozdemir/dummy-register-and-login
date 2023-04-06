@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Blogposts from "../Posts";
 
@@ -10,16 +10,20 @@ const Home = () => {
   const [posts, setPosts] = useState();
   const getUserData = async (token) => {
     try {
-      const res = await fetch(process.env.REACT_APP_BE_URL + "/authors/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.ok) {
-        const userData = await res.json();
-        setUser(userData);
+      if (token) {
+        const res = await fetch(process.env.REACT_APP_BE_URL + "/authors/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.ok) {
+          const userData = await res.json();
+          setUser(userData);
+        } else {
+          console.log("error setting user data");
+        }
       } else {
-        console.log("error setting user data");
+        console.log("token error");
       }
     } catch (error) {
       console.log(error);
@@ -44,6 +48,10 @@ const Home = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const logOut = () => {
+    navigate("/login");
+    localStorage.clear();
   };
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -71,6 +79,9 @@ const Home = () => {
       <Row>
         <Blogposts posts={posts} />
       </Row>
+      <Button variant="danger" onClick={logOut}>
+        Log Out
+      </Button>
     </Container>
   );
 };
