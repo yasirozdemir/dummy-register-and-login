@@ -13,7 +13,6 @@ const Home = () => {
     let accessToken = localStorage.getItem("accessToken");
     if (!accessToken) navigate("/login");
     if (searchParams.get("accessToken")) {
-      // localStorage.setItem("accessToken", searchParams.get("accessToken"));
       accessToken = searchParams.get("accessToken");
       navigate("/");
     }
